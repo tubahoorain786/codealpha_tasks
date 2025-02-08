@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setMaxDate();
+            createBubbles();
+        });
+
+        function setMaxDate() {
+            let today = new Date().toISOString().split("T")[0];
+            document.getElementById('dob').setAttribute("max", today);
+        }
+
+        function createBubbles() {
+            for (let i = 0; i < 20; i++) {
+                let bubble = document.createElement("div");
+                bubble.className = "bubble";
+                let size = Math.random() * 50 + 20;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}vw`;
+                bubble.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                bubble.style.animationDelay = `${Math.random() * 2}s`;
+                document.body.appendChild(bubble);
+            }
+        }
+
+        function calculateAge() {
+            let dob = document.getElementById('dob').value;
+            if (!dob) {
+                document.getElementById('result').innerText = "Please enter a valid date.";
+                return;
+            }
+            
+            let birthDate = new Date(dob);
+            let today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            let monthDiff = today.getMonth() - birthDate.getMonth();
+            let dayDiff = today.getDate() - birthDate.getDate();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                age--;
+            }
+            
+            let months = monthDiff < 0 ? 12 + monthDiff : monthDiff;
+            if (dayDiff < 0) {
+                months--;
+                dayDiff += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+            }
+            
+            document.getElementById('result').innerText = `Your age is ${age} years.`;
+            document.getElementById('detailedResult').innerText = `Exact age: ${age} years, ${months} months, and ${dayDiff} days.`;
+        }
+    </script>
+
+    <div class="container">
+        <h2>Age Calculator</h2>
+        <label for="dob">Enter Your Date of Birth:</label>
+        <input type="date" id="dob" max="">
+
+        <button onclick="calculateAge()">Calculate Age</button>
+        <h3 id="result"></h3>
+        <h4 id="detailedResult"></h4>
+    </div>
+</body>
+</html>
